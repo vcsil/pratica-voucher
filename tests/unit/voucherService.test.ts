@@ -34,13 +34,11 @@ describe("voucherService test suite", () => {
       }
     })
 
-    const buscaVoucherPromise = await voucherService.createVoucher(code, discount);
-
-    console.log(buscaVoucherPromise)
-    console.log('oiii')
-
-    expect(buscaVoucherPromise).toEqual("Voucher already exist.")
-
+    try {
+      const buscaVoucherPromise = await voucherService.createVoucher(code, discount);
+    } catch (error) {
+      expect(error).toEqual(errors.conflictError("Voucher already exist."))
+    }
   })
 
   it("Must apply discount", async () => {
@@ -112,7 +110,12 @@ describe("voucherService test suite", () => {
     });
 
     const amount = 1000;
-    const promise = await voucherService.applyVoucher(code, amount);
-    expect(promise).toEqual("Voucher does not exist.");
+    
+
+    try {
+      const aplicandoVoucherPromise = await voucherService.applyVoucher(code, amount);
+    } catch (error) {
+      expect(error).toEqual(errors.conflictError("Voucher does not exist."));
+    }
   })
 })
