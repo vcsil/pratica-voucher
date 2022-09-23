@@ -34,11 +34,17 @@ describe("voucherService test suite", () => {
       }
     })
 
-    try {
-      const buscaVoucherPromise = await voucherService.createVoucher(code, discount);
-    } catch (error) {
-      expect(error).toEqual(errors.conflictError("Voucher already exist."))
-    }
+    // try {
+    //   const buscaVoucherPromise = await voucherService.createVoucher(code, discount);
+    // } catch (error) {
+    //   expect(error).toEqual(errors.conflictError("Voucher already exist."))
+    // }
+
+    await voucherService.createVoucher(code, discount)
+          .catch(error => {
+            expect(error.message).toBe(errors.conflictError("Voucher already exist.").message)
+            expect(error.type).toBe(errors.conflictError("Voucher already exist.").type)
+          })
   })
 
   it("Must apply discount", async () => {
@@ -110,12 +116,19 @@ describe("voucherService test suite", () => {
     });
 
     const amount = 1000;
-    
+  
+    // try {
+    //   const aplicandoVoucherPromise = await voucherService.applyVoucher(code, amount);
+    // } catch (error) {
+    //   expect(error).toEqual(errors.conflictError("Voucher does not exist."));
+    // }
 
-    try {
-      const aplicandoVoucherPromise = await voucherService.applyVoucher(code, amount);
-    } catch (error) {
-      expect(error).toEqual(errors.conflictError("Voucher does not exist."));
-    }
+    await voucherService.applyVoucher(code, amount)
+          .catch(error => {
+            expect(error.message).toBe(errors.conflictError("Voucher does not exist.").message)
+            expect(error.type).toBe(errors.conflictError("Voucher does not exist.").type)
+          })
+
+
   })
 })
